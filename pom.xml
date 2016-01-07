@@ -5,13 +5,13 @@
 	<artifactId>neurosimulator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
-	<description>My wonderfull scala app</description>
+	<description>Small Neuro Simulation API + example programmed with Scala</description>
 	<inceptionYear>2015</inceptionYear>
 	
 	<licenses>
 		<license>
-			<name>My License</name>
-			<url>http://....</url>
+			<name>GNU General Public License Version 3</name>
+			<url>https://github.com/sergio-alves/NeuroSimulator/blob/master/LICENSE</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
