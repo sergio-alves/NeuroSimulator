@@ -1,6 +1,6 @@
 package ch.santosalves.neurosimulator.impl
 
-import ch.santosalves.neurons.impl.McCullochPittNeuron
+import ch.santosalves.neurons.impl.McCullochPittsNeuron
 import org.scalatest.Assertions
 import org.junit.Test
 import java.util.Observer
@@ -17,7 +17,7 @@ import ch.santosalves.neurosimulator.api.NerveCell
  *
  */
 class McCullochPittNeuronSuite extends Assertions {
-  val neuron = new McCullochPittNeuron("N1", 2.0)
+  val neuron = new McCullochPittsNeuron("N1", 2.0)
   
   @Test def testIfNeuronShouldHaveN1ForName() {    
     assert(neuron.name === "N1")
@@ -37,7 +37,7 @@ class McCullochPittNeuronSuite extends Assertions {
     
     neuron.addObserver(new Observer() {
       def update(arg0: java.util.Observable, arg1: java.lang.Object) = {
-        assert(arg0.asInstanceOf[McCullochPittNeuron].triggerFunction() === 1.0)
+        assert(arg0.asInstanceOf[McCullochPittsNeuron].triggerFunction() === 1.0)
       }
     })
 
