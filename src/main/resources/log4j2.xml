@@ -12,8 +12,8 @@
   </Appenders>
   <Loggers>
     <Root level="trace">
-      <AppenderRef ref="file" level="WARNING"/>
-      <AppenderRef ref="STDOUT" level="INFO"/>
+      <AppenderRef ref="file" level="WARN"/>
+      <AppenderRef ref="STDOUT" level="WARN"/>
     </Root>
   </Loggers>
 </Configuration>
