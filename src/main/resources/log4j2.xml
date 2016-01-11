@@ -7,13 +7,13 @@
       </PatternLayout>
     </File>
     <Console name="STDOUT" target="SYSTEM_OUT">
-      <PatternLayout pattern="%m%n"/>
+      <PatternLayout pattern="%d %p %c{1.} [%t] %m %ex%n"/> <!-- %m%n -->
     </Console>
   </Appenders>
   <Loggers>
     <Root level="trace">
       <AppenderRef ref="file" level="WARN"/>
-      <AppenderRef ref="STDOUT" level="WARN"/>
+      <AppenderRef ref="STDOUT" level="INFO"/>
     </Root>
   </Loggers>
 </Configuration>

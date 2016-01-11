@@ -1,17 +1,14 @@
 package ch.santosalves.neurosimulator.api
 
 import com.thoughtworks.xstream.annotations.XStreamAlias
+import com.thoughtworks.xstream.annotations.XStreamImplicit
 
 /**
  * The base 
  * 
  * @author Sergio Alves
  */
-@XStreamAlias("Network")
-trait NeuronalNetwork {
-  @XStreamAlias("Neurons")  
-  var neurons:Array[NerveCell] = _
-  
-  @XStreamAlias("SynapticLinks")
+trait NeuronalNetwork {  
+  var neurons:Array[NerveCell] = _  
   var synapticLinks:Array[SynapticLink] = _
 }

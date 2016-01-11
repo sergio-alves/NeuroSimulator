@@ -7,6 +7,11 @@ import java.util.Observer
 import java.util.Observable
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.annotations.XStreamAliasType
+import com.thoughtworks.xstream.annotations.XStreamOmitField
+import java.util.UUID
 
 /**
  * The base brick to construct neuron networks
@@ -17,6 +22,11 @@ trait NerveCell extends Observable with Observer {
   val logger = LogManager.getLogger(classOf[NerveCell])
 
   /**
+   * The nerve cell unique identifier
+   */
+  var uuid: UUID = _
+
+  /**
    * The NerveCell name. Should be unique
    */
   var name: String = _
@@ -25,6 +35,11 @@ trait NerveCell extends Observable with Observer {
    * The threshold value @ wish the output should be triggered
    */
   var threshold: Double = _
+
+  /**
+   * Description  
+   */
+  var description: String = _
 
   /**
    * The neuron value
@@ -40,8 +55,6 @@ trait NerveCell extends Observable with Observer {
    * The list of connected dendrites => aka neuron inputs
    */
   var dendrites: ListSet[Tuple2[NerveCell, Double]] = new ListSet()
-
-  implicit val ec = ExecutionContext.global
 
   /**
    * Adds 'output' connection between this nerve cell and a second one.
@@ -86,21 +99,24 @@ trait NerveCell extends Observable with Observer {
    * @param synapticWeight the weighting of the input
    */
   def triggerInput(synapticWeight: Double): Unit = {
-    sum = (dendrites.map(f => f._1.triggerFunction * f._2).sum + synapticWeight)
+    //Update observers. tell them that input was triggered
+    setChanged()
+    notifyObservers(new InputTriggered(synapticWeight))
 
-    logger.debug("[" + name + "] with sum = " + sum + " triggerInput thread id : " + Thread.currentThread().getId)
-
-    //If value above threshold trigger output
-    if (mustTriggerOutput) { 
-      //Future {
-        setChanged()
-        notifyObservers(new OutputTrigged())
-        logger.info("[" + name + "] Observers (" + countObservers + ") have been notified")
-     // }
+    //Calc nerve cell value and notify observers if value changed
+    updateSum(synapticWeight)
+    
+    //If value above threshold trigger output and notify observers
+    if (mustTriggerOutput) {
+      setChanged()
+      notifyObservers(new OutputTrigged())
     }
   }
-  
-  override def setChanged():Unit = {
+
+  /**
+   * overrides observable method
+   */
+  override def setChanged(): Unit = {
     super.setChanged()
   }
 
@@ -109,6 +125,18 @@ trait NerveCell extends Observable with Observer {
    */
   def mustTriggerOutput: Boolean = sum >= threshold
 
+  private def updateSum(inputTriggered:Double = 0) = {
+    var _sum = inputTriggered
+    dendrites.foreach { case (neuron, d) => _sum += (neuron.triggerFunction * d) }
+
+    if (sum != _sum) {
+      setChanged()
+      notifyObservers(new ValueChanged(sum, _sum))
+    }
+
+    sum = _sum
+  }
+
   /**
    * Implements the update method of observer trait
    *
@@ -116,69 +144,20 @@ trait NerveCell extends Observable with Observer {
    * @param objectConcerne The message concern
    */
   def update(observable: Observable, objectConcerne: Object): Unit = {
-    logger.debug("[" + name + "] Observer notified")
-    
     objectConcerne.asInstanceOf[ObservableObject] match {
-      case ValueChanged(x, y) => logger.info("[" + name + "] Observer received a ValueChanged (from -> " + x +
-          " to -> " + y + ") notification from thread id : " + Thread.currentThread().getId +
-          " and the notification is from [" + observable.asInstanceOf[NerveCell].name + "]")
       case OutputTrigged() => {
-        logger.info("[" + name + "] Observer received a OutputTrigged notification from thread " +
-          " id : " + Thread.currentThread().getId + " and the notification is from [" + 
-          observable.asInstanceOf[NerveCell].name + "]")
-        
-        var _sum = 0.0
-        dendrites.foreach(f => _sum += f._1.triggerFunction() * f._2)
-                    
-        val __sum = dendrites.map(f => f._1.triggerFunction * f._2).sum
-        
-        logger.info("Checking two ways to calc sum : [" +_sum +" == "+__sum +"]")
-        
-        sum =__sum
-        logger.info("["+name+"] has " + dendrites.size + " dendritic connexions and sum is "+ sum)
-        
+        //Calc nerve cell value and notify observers if value changed        
+        updateSum()
+
         //If value above threshold trigger output
         if (mustTriggerOutput) {
-          logger.info("["+name+"] sum>threshold => " + sum + " > " + threshold + " ? " + mustTriggerOutput)          
           setChanged()
           notifyObservers(new OutputTrigged())
-        }        
+        }
       }
-      case _ => logger.warn("Should never occur")
+      case _ => { /* do nothing */ }
     }
   }
-    
-  override def hashCode():Int = {
-    var prime = 7
-    var result = 1
-    
-    result = prime * result + name.hashCode() 
-    result = prime * result + threshold.hashCode()
-    result = prime * result + dendrites.hashCode()
-    //result = prime * result + axoneTerminals.hashCode()
-    result = prime * result + sum.hashCode()
-   
-    return result
-  }
-  
-  override def equals(arg0: Any): Boolean = {
-    if(arg0==this) return true 
-    else if(arg0 == null)
-      return false
-    else {          
-      if(arg0.isInstanceOf[NerveCell]) {
-        val v = arg0.asInstanceOf[NerveCell]      
-        return v.name.equals(name) && v.threshold.equals(threshold) && 
-        v.dendrites.hashCode() == dendrites.hashCode() && v.axoneTerminals.equals(axoneTerminals) &&
-        sum == v.sum
-      } else {
-        return false
-      }
-    }
-    
-    return false
-  }
-  
 
   /**
    * Defines the NerveCell trigger function => the output value
