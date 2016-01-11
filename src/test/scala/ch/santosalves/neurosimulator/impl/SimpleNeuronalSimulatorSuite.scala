@@ -16,9 +16,9 @@ class SimpleNeuronalSimulatorSuite extends Assertions {
     NerveCellFactory.createNerveCell(NerveCellTypes.McCullochAndPitts, "N1", 2),
     NerveCellFactory.createNerveCell(NerveCellTypes.McCullochAndPitts, "N2", 3))
 
-  val synlnk = Array[SynapticLink](new SimpleSynapticLink("L1", narray(0), narray(1), 3.2))
+  val synlnk = Array[SynapticLink](new SynapticLinkImpl("L1", narray(0), narray(1), 3.2))
     
-  val sns = new SimpleNeuronalSimulator(new SimpleNeuronalNetwork(narray, synlnk))    
+  val sns = new NeuronalSimulatorImpl(new NeuronalNetworkImpl(narray, synlnk))    
     
   @Test def testThatObjectsAreTheSame () {
     narray(0).sum = 10
@@ -63,23 +63,8 @@ class SimpleNeuronalSimulatorSuite extends Assertions {
     //because we set a 3.2 weight for the N1 --3.2--> N2 link and because
     //N2 threshold == 3 then n(1)==N2 should trigger output         
     println("N2 sum value ??? " + sns.network.neurons(1).sum)
-
-        println("narray(0)                                                               : " + narray(0).toString() +"\r\n" +
-      "narray(1)                                                               : " + narray(1).toString() +"\r\n"+ 
-      "sns.network.neurons(0)                                                  : " + sns.network.neurons(0).toString() +"\r\n" +
-      "sns.network.neurons(1)                                                  : " + sns.network.neurons(1).toString() +"\r\n" +
-      "sns.network.neurons(0).axoneTerminals.unzip[NerveCell, Double]._1.head  : " + sns.network.neurons(0).axoneTerminals.unzip[NerveCell, Double]._1.head.toString() +"\r\n"
-     )
     assert(sns.network.neurons(1).triggerFunction() === 1.0)
-
-    println("narray(0)                                                               : " + narray(0).toString() +"\r\n" +
-      "narray(1)                                                               : " + narray(1).toString() +"\r\n"+ 
-      "sns.network.neurons(0)                                                  : " + sns.network.neurons(0).toString() +"\r\n" +
-      "sns.network.neurons(1)                                                  : " + sns.network.neurons(1).toString() +"\r\n" +
-      "sns.network.neurons(0).axoneTerminals.unzip[NerveCell, Double]._1.head  : " + sns.network.neurons(0).axoneTerminals.unzip[NerveCell, Double]._1.head.toString() +"\r\n"
-     )
     assert(sns.network.neurons(0).axoneTerminals.unzip[NerveCell, Double]._1.head.sum === 3.2)
     assert(sns.network.neurons(1).mustTriggerOutput === true)
-    
-  }
+  }  
 }

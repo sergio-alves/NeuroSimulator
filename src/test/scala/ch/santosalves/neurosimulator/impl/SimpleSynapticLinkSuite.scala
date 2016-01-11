@@ -9,7 +9,7 @@ class SimpleSynapticLinkSuite extends Assertions{
   val narray = Array[McCullochPittsNeuron](
     NerveCellFactory.createNerveCell(NerveCellTypes.McCullochAndPitts, "N1", 2).asInstanceOf[McCullochPittsNeuron],
     NerveCellFactory.createNerveCell(NerveCellTypes.McCullochAndPitts, "N2", 3).asInstanceOf[McCullochPittsNeuron])
-  val synlnk = Array[SynapticLink](new SimpleSynapticLink("L1", narray(0), narray(1), 3.2))
+  val synlnk = Array[SynapticLink](new SynapticLinkImpl("L1", narray(0), narray(1), 3.2))
 
   @Test def testInitialization() {
     assert(synlnk.size === 1)      
