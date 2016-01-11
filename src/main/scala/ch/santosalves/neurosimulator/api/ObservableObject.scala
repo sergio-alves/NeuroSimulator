@@ -6,6 +6,6 @@ package ch.santosalves.neurosimulator.api
  * @author Sergio Alves
  */
 abstract class ObservableObject
-  case class OutputTrigged() extends ObservableObject
+  case class OutputTrigged(valut:Double) extends ObservableObject
   case class ValueChanged(old:Double, current:Double) extends ObservableObject
   case class InputTriggered(value:Double) extends ObservableObject

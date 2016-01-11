@@ -8,7 +8,6 @@ import org.junit.Test
 import org.scalatest.Assertions
 import ch.santosalves.neurosimulator.api.SynapticLink
 import ch.santosalves.neurosimulator.impl.NerveCellTypes.McCullochAndPitts
-import ch.santosalves.neurons.impl.McCullochPittsNeuron
 import ch.santosalves.neurosimulator.api.SynapticLink
 
 class SimpleNeuronalSimulatorSuite extends Assertions {

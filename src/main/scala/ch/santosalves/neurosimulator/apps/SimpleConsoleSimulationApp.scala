@@ -13,7 +13,6 @@ import ch.santosalves.neurosimulator.configuration.ConfigurationLoader
 import ch.santosalves.neurosimulator.api.Simulation
 import ch.santosalves.neurosimulator.configuration.SimulationConfiguration
 import scala.io.StdIn
-import ch.santosalves.neurons.impl.McCullochPittsNeuron
 import java.util.UUID
 import scala.collection.mutable.HashMap
 import ch.santosalves.neurosimulator.api.NerveCell
@@ -35,6 +34,7 @@ import ch.santosalves.neurosimulator.api.ValueChanged
 import ch.santosalves.neurosimulator.api.ObservableObject
 import ch.santosalves.neurosimulator.api.InputTriggered
 import org.apache.logging.log4j.LogManager
+import ch.santosalves.neurosimulator.impl.McCullochPittsNeuron
 
 object SimpleConsoleSimulationApp extends App with Observer {
   val logger = LogManager.getLogger(classOf[App])
@@ -46,14 +46,14 @@ object SimpleConsoleSimulationApp extends App with Observer {
 
     arg1.asInstanceOf[ObservableObject] match {
       case ValueChanged(x, y) => logger.debug(s"[${neuron.name}] Sum value changed (old,new)->(${x}, ${y})")
-      case OutputTrigged()    => logger.debug(s"[${neuron.name}] Threshold exceeded. Output triggered with value ${neuron.triggerFunction()}")
+      case OutputTrigged(v)   => logger.debug(s"[${neuron.name}] Output triggered with value ${v}")
       case InputTriggered(v)  => logger.debug(s"[${neuron.name}] Input triggered with value ${v}")
     }
   }
 
-  def displayNetorkState(deep: Int, neuron: NerveCell):Unit = {
+  def displayNetorkState(deep: Int, neuron: NerveCell): Unit = {
     val sb = new StringBuilder()
-    Range.apply(0, deep).foreach { x => if (x < (deep-1)) sb.append("   ") else sb.append("|--") }
+    Range.apply(0, deep).foreach { x => if (x < (deep - 1)) sb.append("   ") else sb.append("|--") }
     logger.info(s"[${neuron.name}]${sb.toString()}${neuron.sum}")
     neuron.dendrites.foreach { case (n, w) => displayNetorkState(deep + 1, n) }
   }
@@ -87,9 +87,9 @@ object SimpleConsoleSimulationApp extends App with Observer {
           else
             logger.warn(s"[${output.neuron.name}] output value doesn't match with expected value")
         }
-        
+
         logger.info("Network state -----------------------------------")
-        outputs.foreach { neuron => displayNetorkState(0, neuron)}
+        outputs.foreach { neuron => displayNetorkState(0, neuron) }
     }
 
     logger.trace("SimpleConsoleSimulationApp execution terminated")

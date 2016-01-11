@@ -1,4 +1,4 @@
-package ch.santosalves.neurons.impl
+package ch.santosalves.neurosimulator.impl
 
 import ch.santosalves.neurosimulator.api.NerveCell
 import com.thoughtworks.xstream.annotations.XStreamAlias

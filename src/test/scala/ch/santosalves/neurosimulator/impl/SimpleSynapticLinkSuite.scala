@@ -2,7 +2,6 @@ package ch.santosalves.neurosimulator.impl
 
 import org.junit.Test
 import org.scalatest.Assertions
-import ch.santosalves.neurons.impl.McCullochPittsNeuron
 import ch.santosalves.neurosimulator.api.SynapticLink
 
 class SimpleSynapticLinkSuite extends Assertions{

@@ -5,7 +5,6 @@ import org.junit.Test
 import ch.santosalves.neurosimulator.api.NerveCell
 import ch.santosalves.neurosimulator.impl.NerveCellTypes.NerveCellType
 import ch.santosalves.neurosimulator.impl.NerveCellTypes.McCullochAndPitts
-import ch.santosalves.neurons.impl.McCullochPittsNeuron
 
 class NerveCellFactorySuite extends Assertions {
     

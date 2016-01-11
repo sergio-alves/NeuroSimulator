@@ -1,6 +1,5 @@
 package ch.santosalves.neurosimulator.impl
 
-import ch.santosalves.neurons.impl.McCullochPittsNeuron
 import org.scalatest.Assertions
 import org.junit.Test
 import java.util.Observer

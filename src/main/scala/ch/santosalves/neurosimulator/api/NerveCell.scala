@@ -106,11 +106,9 @@ trait NerveCell extends Observable with Observer {
     //Calc nerve cell value and notify observers if value changed
     updateSum(synapticWeight)
     
-    //If value above threshold trigger output and notify observers
-    if (mustTriggerOutput) {
-      setChanged()
-      notifyObservers(new OutputTrigged())
-    }
+    //Trigger output 
+    setChanged()
+    notifyObservers(new OutputTrigged(triggerFunction))
   }
 
   /**
@@ -145,15 +143,13 @@ trait NerveCell extends Observable with Observer {
    */
   def update(observable: Observable, objectConcerne: Object): Unit = {
     objectConcerne.asInstanceOf[ObservableObject] match {
-      case OutputTrigged() => {
+      case OutputTrigged(v) => {
         //Calc nerve cell value and notify observers if value changed        
         updateSum()
 
         //If value above threshold trigger output
-        if (mustTriggerOutput) {
-          setChanged()
-          notifyObservers(new OutputTrigged())
-        }
+        setChanged()
+        notifyObservers(new OutputTrigged(triggerFunction()))
       }
       case _ => { /* do nothing */ }
     }

@@ -8,7 +8,7 @@
         <threshold>1.0</threshold>
         <location>
           <x>100</x>
-          <y>100</y>
+          <y>50</y>
         </location>
       </ch.santosalves.neurosimulator.configuration.NeuronConfiguration>      
       <ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
@@ -18,7 +18,7 @@
         <threshold>1.0</threshold>
         <location>
           <x>100</x>
-          <y>300</y>
+          <y>100</y>
         </location>
       </ch.santosalves.neurosimulator.configuration.NeuronConfiguration>     
       <ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
@@ -28,7 +28,7 @@
         <threshold>1.0</threshold>
         <location>
           <x>100</x>
-          <y>300</y>
+          <y>150</y>
         </location>
       </ch.santosalves.neurosimulator.configuration.NeuronConfiguration>      
       <ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
@@ -38,7 +38,7 @@
         <threshold>1.0</threshold>
         <location>
           <x>100</x>
-          <y>300</y>
+          <y>200</y>
         </location>
       </ch.santosalves.neurosimulator.configuration.NeuronConfiguration>      
       <ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
@@ -48,7 +48,7 @@
         <threshold>1.0</threshold>
         <location>
           <x>100</x>
-          <y>300</y>
+          <y>250</y>
         </location>
       </ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
       <ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
@@ -71,7 +71,7 @@
         <threshold>1.0</threshold>
         <location>
           <x>200</x>
-          <y>200</y>
+          <y>150</y>
         </location>
       </ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
       <ch.santosalves.neurosimulator.configuration.NeuronConfiguration>
