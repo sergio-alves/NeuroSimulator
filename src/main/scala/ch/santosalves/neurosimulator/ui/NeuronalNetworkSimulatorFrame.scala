@@ -51,17 +51,19 @@ class NeuronalNetworkSimulatorFrame() extends JFrame {
 
   /* load a model from file and render it */
   var conf: SimulationConfiguration = _
-  var counter:Int = 0;
+  var counter: Int = 0;
   var neurons: HashMap[String, NerveCell] = _
   var uiNeurons: HashMap[String, Neuron] = _
   var links: HashMap[String, SynapticLink] = _
   var uiLinks: HashMap[String, NeuronLink] = _
-
+  var jp:JPanel = _
+  var p:PlaygroundPanel = _
+  var btNext:JButton = _
+  
   def initComponents = {
-
     getContentPane.setLayout(new GridBagLayout());
 
-    var p = new PlaygroundPanel()
+    p = new PlaygroundPanel()
     p.setLayout(null)
     p.setPreferredSize(new Dimension(600, 200))
     //p.setBorder(BorderFactory.createLineBorder(Color.black))
@@ -76,20 +78,24 @@ class NeuronalNetworkSimulatorFrame() extends JFrame {
 
     getContentPane().add(p, gridBagConstraints)
 
-    var jp = new JPanel
+    jp = new JPanel
     jp.setPreferredSize(new Dimension(600, 100))
     jp.setLayout(null)
 
-    var btNext = new JButton("Next")
+    btNext = new JButton("Next")
     btNext.setBounds(10, 10, 100, 25)
     jp.add(btNext)
 
     btNext.addMouseListener(new MouseAdapter() {
+      
       override def mouseClicked(e: MouseEvent) = {
-        println(s"Total steps = ${conf.executionPlan.steps.size}")
         if (counter < conf.executionPlan.steps.size) {
-          conf.executionPlan.steps(counter).inputs.foreach { e => neurons(e.neuronUUID).triggerInput(e.weight) }
+          conf.executionPlan.steps(counter).inputs.foreach {e => neurons(e.neuronUUID).triggerInput(e.weight)}
+          logger.info(s"Executed Step ${counter+1}/${conf.executionPlan.steps.size}")
           counter += 1
+          
+          p.repaint()          
+          
         } else {
           JOptionPane.showMessageDialog(null, "No more steps to execute")
         }
@@ -112,18 +118,18 @@ class NeuronalNetworkSimulatorFrame() extends JFrame {
     //loaded neurons
     conf.neuronalNetwork.neurons.zipWithIndex.foreach {
       case (n, i) =>
+        //create a copy from configuration
         val neuron = new McCullochPittsNeuron(UUID.fromString(n.uuid), n.name, n.threshold, n.description)
-        neurons.put(n.uuid, neuron)
-
-        val uiNeuron = new Neuron(McCullochAndPitts, neuron.name, neuron.threshold)
-        uiNeuron.setBounds(n.location.x, n.location.y, uiNeuron.Dimensions.Width, uiNeuron.Dimensions.Height)
+        neurons.put(n.uuid, neuron)        
+        val uiNeuron = new Neuron(neuron)
         uiNeurons.put(n.uuid, uiNeuron)
-
-        p.add(uiNeurons(n.uuid))
-        uiNeurons(n.uuid).addMouseListener(new MouseAdapter() {
+        uiNeuron.setBounds(n.location.x, n.location.y, uiNeuron.Dimensions.Width, uiNeuron.Dimensions.Height)        
+        p.add(uiNeuron)
+        
+        uiNeuron.addMouseListener(new MouseAdapter() {
           override def mouseClicked(arg0: MouseEvent) = {
-            arg0.getSource.asInstanceOf[Neuron].neuron.triggerInput(2.0)
-            arg0.getSource.asInstanceOf[Component].repaint
+            neurons(arg0.getSource.asInstanceOf[Neuron].neuron.uuid.toString()).triggerInput(2.0)
+            p.repaint()
           }
         })
     }
@@ -135,6 +141,7 @@ class NeuronalNetworkSimulatorFrame() extends JFrame {
         uiLinks(l.uuid) = new NeuronLink(l.name, uiNeurons(l.inputNeuronId), uiNeurons(l.outputNeuronId), l.weight)
         p.add(uiLinks(l.uuid))
         uiLinks(l.uuid).updateBounds
+        uiNeurons(l.inputNeuronId).neuron.addObserver(uiLinks(l.uuid))
     }
 
   }

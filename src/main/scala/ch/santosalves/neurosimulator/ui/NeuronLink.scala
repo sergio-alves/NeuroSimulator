@@ -31,7 +31,7 @@ class NeuronLink(n: String, n1: Neuron, n2: Neuron, weight: Double) extends JPan
   var maxY = 0
   // do some initialization
   init
-
+  
   n1.addComponentListener(new ComponentAdapter() {
     override def componentMoved(arg0: ComponentEvent) = {
       updateBounds
@@ -54,7 +54,11 @@ class NeuronLink(n: String, n1: Neuron, n2: Neuron, weight: Double) extends JPan
   var wireColor= Color.black
   def update(arg0: Observable, arg1:Any) = {
     arg1 match {
-      case OutputTrigged(v) => wireColor = new Color(0, (v*255).intValue(), 0)
+      case OutputTrigged(v) =>{
+        wireColor = new Color(0, (v*255).intValue(), 0)
+        logger.info(s"[${n1.name}] trigged value ${n1.neuron.triggerFunction()} to [${n2.name}]")
+        repaint()
+      }
       case _ => 
     }
   }
@@ -93,17 +97,9 @@ class NeuronLink(n: String, n1: Neuron, n2: Neuron, weight: Double) extends JPan
   }
 
   override def paint(g: Graphics) = {
-    //super.paint(g)      
-    g.setXORMode(Color.WHITE)
-    
-    updateBounds
-    
-   //if (name.equals("L11"))
-     //setBorder(BorderFactory.createLineBorder(Color.black))
-
-    //logger.debug("(x1,y1)->(x2,y2) => (" + n1.getX + "," + n1.getY + ")->(" + n2.getX + ", " + n2.getY + ")")
-    
     val c = g.getColor
+    g.setXORMode(Color.WHITE)    
+    
     g.setColor(wireColor)      
     g.asInstanceOf[Graphics2D].setStroke(new BasicStroke(2))
     bbox.quadrant match {
@@ -111,8 +107,11 @@ class NeuronLink(n: String, n1: Neuron, n2: Neuron, weight: Double) extends JPan
       case 3 => g.drawLine(0, 0, bbox.getWidth, bbox.getHeight)
       case 2 => g.drawLine(0, bbox.getHeight, bbox.getWidth, 0)
       case 4 => g.drawLine(0, bbox.getHeight, bbox.getWidth, 0)
-    }
+    }    
     
     g.setColor(c)
+    
+    super.paint(g)
+    
   }
 }
