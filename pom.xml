@@ -55,12 +55,14 @@
 			<version>2.2.4</version>
 			<scope>test</scope>
 		</dependency>
-
+		
+<!-- Critical issue related to this dep. Possibly upgrade the version
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>1.4.8</version>
-		</dependency>
+		</dependency> 
+-->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
